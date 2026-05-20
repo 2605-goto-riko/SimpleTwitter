@@ -66,7 +66,10 @@
 		<c:forEach items="${messages}" var="message">
 			<div class="message">
 				<div class="account-name">
-					<span class="account"><c:out value="${message.account}" /></span>
+				<!-- アカウント名をリンクにする -->
+					<a href="./?user_id=<c:out value="${message.userId}"/> ">
+						<span class="account"><c:out value="${message.account}" /></span>
+					</a>
 					<span class="name"><c:out value="${message.name}" /></span>
 				</div>
 				<div class="text">
@@ -79,6 +82,6 @@
 			</div>
 		</c:forEach>
 	</div>
-	<div class="copyright">Copyright(c)Goto Riko</div>
+	<div class="copyright">Copyright(c)GotoRiko</div>
 </body>
 </html>

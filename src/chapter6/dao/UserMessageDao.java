@@ -29,15 +29,13 @@ public class UserMessageDao {
 	public UserMessageDao() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
-
 	}
 
-	public List<UserMessage> select(Connection connection, int num) {
 
-		log.info(new Object() {
-		}.getClass().getEnclosingClass().getName() +
-				" : " + new Object() {
-				}.getClass().getEnclosingMethod().getName());
+	public List<UserMessage> select(Connection connection, Integer id, int num) {
+
+		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		PreparedStatement ps = null;
 		try {
@@ -52,22 +50,29 @@ public class UserMessageDao {
 			sql.append("FROM messages ");
 			sql.append("INNER JOIN users ");
 			sql.append("ON messages.user_id = users.id ");
+			if (id != null) {
+				sql.append("WHERE messages.user_id = ? ");
+			}
 			sql.append("ORDER BY created_date DESC limit " + num);
 
 			ps = connection.prepareStatement(sql.toString());
+
+			if (id != null) {
+				ps.setInt(1, id);
+			}
 
 			ResultSet rs = ps.executeQuery();
 
 			List<UserMessage> messages = toUserMessages(rs);
 			return messages;
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
 		}
 	}
+
 
 	private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 
