@@ -35,7 +35,8 @@ public class UserDao {
 
 	public void insert(Connection connection, User user) {
 
-		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
+		log.info(new Object() {
+		}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		PreparedStatement ps = null;
@@ -69,8 +70,7 @@ public class UserDao {
 
 			ps.executeUpdate();
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
@@ -105,8 +105,7 @@ public class UserDao {
 				return users.get(0);
 			}
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
@@ -164,8 +163,7 @@ public class UserDao {
 				return users.get(0);
 			}
 		} catch (SQLException e) {
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);
@@ -184,7 +182,10 @@ public class UserDao {
 			sql.append("    account = ?, ");
 			sql.append("    name = ?, ");
 			sql.append("    email = ?, ");
-			sql.append("    password = ?, ");
+			//パスワードを受け取った場合
+			if (!user.getPassword().isEmpty()) {
+				sql.append("    password = ?, ");
+			}
 			sql.append("    description = ?, ");
 			sql.append("    updated_date = CURRENT_TIMESTAMP ");
 			sql.append("WHERE id = ?");
@@ -194,9 +195,14 @@ public class UserDao {
 			ps.setString(1, user.getAccount());
 			ps.setString(2, user.getName());
 			ps.setString(3, user.getEmail());
-			ps.setString(4, user.getPassword());
-			ps.setString(5, user.getDescription());
-			ps.setInt(6, user.getId());
+			if (!user.getPassword().isEmpty()) {
+				ps.setString(4, user.getPassword());
+				ps.setString(5, user.getDescription());
+				ps.setInt(6, user.getId());
+			}else{
+				ps.setString(4, user.getDescription());
+				ps.setInt(5, user.getId());
+			};
 
 			int count = ps.executeUpdate();
 			if (count == 0) {

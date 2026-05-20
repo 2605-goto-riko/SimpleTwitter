@@ -26,15 +26,13 @@ public class UserService {
 	public UserService() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
-
 	}
 
 	public void insert(User user) {
 
 		log.info(new Object() {
 		}.getClass().getEnclosingClass().getName() +
-				" : " + new Object() {
-				}.getClass().getEnclosingMethod().getName());
+				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		Connection connection = null;
 		try {
@@ -47,13 +45,11 @@ public class UserService {
 			commit(connection);
 		} catch (RuntimeException e) {
 			rollback(connection);
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw e;
 		} catch (Error e) {
 			rollback(connection);
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw e;
 		} finally {
 			close(connection);
@@ -77,8 +73,7 @@ public class UserService {
 			return user;
 		} catch (RuntimeException e) {
 			rollback(connection);
-			log.log(Level.SEVERE, new Object() {
-			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			log.log(Level.SEVERE, new Object() {}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
 			throw e;
 		} catch (Error e) {
 			rollback(connection);
@@ -123,9 +118,12 @@ public class UserService {
 
 	    Connection connection = null;
 	    try {
+	    	//パスワードが入力されている場合のみ暗号化する
+	    	if (!user.getPassword().isEmpty()) {
 	        // パスワード暗号化
 	        String encPassword = CipherUtil.encrypt(user.getPassword());
 	        user.setPassword(encPassword);
+	    	}
 
 	        connection = getConnection();
 	        new UserDao().update(connection, user);
