@@ -111,12 +111,12 @@ public class SettingServlet extends HttpServlet {
 		int id = user.getId();
 
 		/*	ユーザー重複チェック*/
-			User overlapUser = new UserService().select(account);
-			/*テーブルにユーザーが登録されている(アカウント名でselect)かつ、
-			 * 登録されているユーザーIDと入力しているユーザーのIDが一致しない場合*/
-			if (overlapUser != null && overlapUser.getId() != id) {
-				errorMessages.add("すでに存在するアカウントです");
-			}
+		User overlapUser = new UserService().select(account);
+		/*テーブルにユーザーが登録されている(アカウント名でselect)かつ、
+		 * 登録されているユーザーIDと入力しているユーザーのIDが一致しない場合*/
+		if (overlapUser != null && overlapUser.getId() != id) {
+			errorMessages.add("すでに存在するアカウントです");
+		}
 
 		//入力チェック
 		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
