@@ -64,10 +64,8 @@ public class SettingServlet extends HttpServlet {
 		List<String> errorMessages = new ArrayList<String>();
 
 		User user = getUser(request);
-		//ログインユーザー情報取得
-		User loginUser = (User)request.getSession().getAttribute("loginUser");
 
-		if (isValid(user, loginUser, errorMessages)) {
+		if (isValid(user, errorMessages)) {
 				try {
 					new UserService().update(user);
 				} catch (NoRowsUpdatedRuntimeException e) {
@@ -102,7 +100,7 @@ public class SettingServlet extends HttpServlet {
 	}
 
 
-	private boolean isValid(User user, User loginUser, List<String> errorMessages) {
+	private boolean isValid(User user, List<String> errorMessages) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
@@ -110,16 +108,15 @@ public class SettingServlet extends HttpServlet {
 		String name = user.getName();
 		String account = user.getAccount();
 		String email = user.getEmail();
+		int id = user.getId();
 
-		/*	ユーザー重複チェック
-		 * ログインアカウント名と入力したアカウント名が一致していない場合にselectする*/
-		if (!(loginUser.getAccount().equals(account))) {
+		/*	ユーザー重複チェック*/
 			User overlapUser = new UserService().select(account);
-			//ユーザーが存在する場合、エラーを出力する
-			if (overlapUser != null) {
+			/*テーブルにユーザーが登録されている(アカウント名でselect)かつ、
+			 * 登録されているユーザーIDと入力しているユーザーのIDが一致しない場合*/
+			if (overlapUser != null && overlapUser.getId() != id) {
 				errorMessages.add("すでに存在するアカウントです");
 			}
-		}
 
 		//入力チェック
 		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
