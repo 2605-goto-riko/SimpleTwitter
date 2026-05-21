@@ -32,8 +32,8 @@ public class UserDao {
 	public UserDao() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
-
 	}
+
 
 	public void insert(Connection connection, User user) {
 
@@ -79,6 +79,7 @@ public class UserDao {
 		}
 	}
 
+
 	public User select(Connection connection, String accountOrEmail, String password) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
@@ -114,6 +115,7 @@ public class UserDao {
 		}
 	}
 
+
 	private List<User> toUsers(ResultSet rs) throws SQLException {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
@@ -139,6 +141,7 @@ public class UserDao {
 			close(rs);
 		}
 	}
+
 
 	public User select(Connection connection, int id) {
 
@@ -171,6 +174,7 @@ public class UserDao {
 			close(ps);
 		}
 	}
+
 
 	public void update(Connection connection, User user) {
 
@@ -214,6 +218,36 @@ public class UserDao {
 		} catch (SQLException e) {
 			log.log(Level.SEVERE, new Object() {
 			}.getClass().getEnclosingClass().getName() + " : " + e.toString(), e);
+			throw new SQLRuntimeException(e);
+		} finally {
+			close(ps);
+		}
+	}
+
+
+	/*実践課題③追加メソッド
+	 * String型のaccountを引数にもつ、selectメソッドを追加する
+	 * */
+	public User select(Connection connection, String account) {
+
+		PreparedStatement ps = null;
+		try {
+			String sql = "SELECT * FROM users WHERE account = ?";
+
+			ps = connection.prepareStatement(sql);
+			ps.setString(1, account);
+
+			ResultSet rs = ps.executeQuery();
+
+			List<User> users = toUsers(rs);
+			if (users.isEmpty()) {
+				return null;
+			} else if (2 <= users.size()) {
+				throw new IllegalStateException("ユーザーが重複しています");
+			} else {
+				return users.get(0);
+			}
+		} catch (SQLException e) {
 			throw new SQLRuntimeException(e);
 		} finally {
 			close(ps);

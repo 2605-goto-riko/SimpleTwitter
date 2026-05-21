@@ -64,13 +64,15 @@ public class SettingServlet extends HttpServlet {
 		List<String> errorMessages = new ArrayList<String>();
 
 		User user = getUser(request);
-		if (isValid(user, errorMessages)) {
-			try {
-				new UserService().update(user);
-			} catch (NoRowsUpdatedRuntimeException e) {
-				log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
-				errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
-			}
+		User loginUser = (User) request.getSession().getAttribute("loginUser");
+
+		if (isValid(user, loginUser, errorMessages)) {
+				try {
+					new UserService().update(user);
+				} catch (NoRowsUpdatedRuntimeException e) {
+					log.warning("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+					errorMessages.add("他の人によって更新されています。最新のデータを表示しました。データを確認してください。");
+				}
 		}
 		if (errorMessages.size() != 0) {
 			request.setAttribute("errorMessages", errorMessages);
@@ -99,7 +101,7 @@ public class SettingServlet extends HttpServlet {
 	}
 
 
-	private boolean isValid(User user, List<String> errorMessages) {
+	private boolean isValid(User user, User loginUser, List<String> errorMessages) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
@@ -108,6 +110,17 @@ public class SettingServlet extends HttpServlet {
 		String account = user.getAccount();
 		String email = user.getEmail();
 
+		/*	ユーザー重複チェック
+		 * ログインアカウント名と入力したアカウント名が一致していない場合にselectする*/
+		if (!(loginUser.getAccount().equals(account))) {
+			User overlapUser = new UserService().select(account);
+			//ユーザーが存在する場合、エラーを出力する
+			if (overlapUser != null) {
+				errorMessages.add("すでに存在するアカウントです");
+			}
+		}
+
+		//入力チェック
 		if (!StringUtils.isEmpty(name) && (20 < name.length())) {
 			errorMessages.add("名前は20文字以下で入力してください");
 		}
