@@ -41,7 +41,7 @@
                 <a href="./">戻る</a>
             </form>
 
-            <div class="copyright">Copyright(c)Goto Riko</div>
+            <div class="copyright">Copyright(c)GotoRiko</div>
         </div>
     </body>
 </html>

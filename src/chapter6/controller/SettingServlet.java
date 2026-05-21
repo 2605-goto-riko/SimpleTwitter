@@ -64,7 +64,8 @@ public class SettingServlet extends HttpServlet {
 		List<String> errorMessages = new ArrayList<String>();
 
 		User user = getUser(request);
-		User loginUser = (User) request.getSession().getAttribute("loginUser");
+		//ログインユーザー情報取得
+		User loginUser = (User)request.getSession().getAttribute("loginUser");
 
 		if (isValid(user, loginUser, errorMessages)) {
 				try {
