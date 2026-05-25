@@ -37,8 +37,7 @@ public class UserDao {
 
 	public void insert(Connection connection, User user) {
 
-		log.info(new Object() {
-		}.getClass().getEnclosingClass().getName() +
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
 
 		PreparedStatement ps = null;

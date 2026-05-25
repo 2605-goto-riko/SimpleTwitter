@@ -66,14 +66,30 @@
 		<c:forEach items="${messages}" var="message">
 			<div class="message">
 				<div class="account-name">
-				<!-- アカウント名をリンクにする -->
+					<!-- アカウント名をリンクにする -->
 					<a href="./?user_id=<c:out value="${message.userId}"/> ">
-						<span class="account"><c:out value="${message.account}" /></span>
-					</a>
-					<span class="name"><c:out value="${message.name}" /></span>
+					<span class="account"><c:out value="${message.account}" /></span>
+					</a> <span class="name"><c:out value="${message.name}" /></span>
 				</div>
 				<div class="text">
-					<c:out value="${message.text}" />
+					<pre><c:out value="${message.text}" /></pre>
+				</div>
+				<div>
+					<div class="buttons">
+						<c:if test="${ isShowMessageForm }">
+							<c:if test="${ loginUser.id == message.userId}">
+								<form class="deleteButton" action="deleteMessage" method="post">
+									<input type="hidden" name="messageId" id="messageId"
+										value="${message.id}"> <input type="submit" value="削除"
+										class="btn">
+								</form>
+								<form action="edit" method="get">
+									<input type="hidden" name="messageId" id="messageId"
+										value="${message.id}"> <input type="submit" value="編集">
+								</form>
+							</c:if>
+						</c:if>
+					</div>
 				</div>
 				<div class="date">
 					<fmt:formatDate value="${message.createdDate}"
