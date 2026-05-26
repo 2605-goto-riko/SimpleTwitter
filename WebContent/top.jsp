@@ -40,6 +40,15 @@
 				<c:out value="${loginUser.description}" />
 			</div>
 		</div>
+		<div class=date>
+			<form action="./" method="get">
+				日時：
+				<input type="date" name="startDate">
+				～
+				<input type="date" name="endDate">
+				<input type="submit" value="絞り込み">
+			</div>
+		</form>
 	</c:if>
 	<c:if test="${ not empty errorMessages }">
 		<div class="errorMessages">

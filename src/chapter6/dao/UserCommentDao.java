@@ -41,14 +41,19 @@ public class UserCommentDao {
 		try {
 
 			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT m.id AS message_id, u.id AS user_id, u.name, u.account, ");
-			sql.append("c.id AS comment_id, c.text,c.created_date ");
-			sql.append("FROM comments c ");
-			sql.append("INNER JOIN messages m ");
-			sql.append("ON c.message_id = m.id ");
-			sql.append("INNER JOIN users u ");
-			sql.append("ON c.user_id = u.id ");
-			sql.append("ORDER BY created_date ASC limit " + num);
+			sql.append("SELECT ");
+			sql.append("comments.id AS message_id, ");
+			sql.append("users.id AS user_id, ");
+			sql.append("users.name, users.account, ");
+			sql.append("comments.id AS comment_id, ");
+			sql.append("comments.text, ");
+			sql.append("comments.created_date ");
+			sql.append("FROM comments ");
+			sql.append("INNER JOIN messages ");
+			sql.append("ON comments.message_id = messages.id ");
+			sql.append("INNER JOIN users ");
+			sql.append("ON comments.user_id = users.id ");
+			sql.append("ORDER BY comments.created_date ASC limit " + num);
 
 			ps = connection.prepareStatement(sql.toString());
 

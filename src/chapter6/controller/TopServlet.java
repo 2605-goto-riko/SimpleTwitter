@@ -47,8 +47,11 @@ public class TopServlet extends HttpServlet {
 		}
 		/*userIdをServiceに渡す*/
 		String userId = request.getParameter("user_id");
-		List<UserMessage> messages = new MessageService().select(userId);
+		String startDate = request.getParameter("startDate");
+		String endDate = request.getParameter("endDate");
 		String messageId = request.getParameter("message_id");
+
+		List<UserMessage> messages = new MessageService().select(userId, startDate, endDate);
 		List<UserComment> comments = new CommentService().select(messageId);
 
 		request.setAttribute("messages", messages);
