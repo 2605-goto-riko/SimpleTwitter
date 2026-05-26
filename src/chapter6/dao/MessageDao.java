@@ -80,7 +80,6 @@ public class MessageDao {
 
 			ps = connection.prepareStatement(sql.toString());
 
-
 			ps.setString(1, messageId);
 
 			ps.executeUpdate();
@@ -93,7 +92,7 @@ public class MessageDao {
 		}
 	}
 
-	public Message select(Connection connection, String messageId) {
+	public Message select(Connection connection, Integer messageId) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
@@ -105,7 +104,7 @@ public class MessageDao {
 
 			ps = connection.prepareStatement(sql.toString());
 
-			ps.setString(1, messageId);
+			ps.setLong(1, messageId);
 
 			ResultSet rs = ps.executeQuery();
 
@@ -126,7 +125,7 @@ public class MessageDao {
 	}
 
 	/*つぶやきの更新*/
-	public void update(Connection connection, int messageId, String text) {
+	public void update(Connection connection, Message message) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
@@ -142,8 +141,8 @@ public class MessageDao {
 
 			ps = connection.prepareStatement(sql.toString());
 
-			ps.setString(1, text);
-			ps.setLong(2, messageId);
+			ps.setString(1, message.getText());
+			ps.setLong(2, message.getId());
 
 			ps.executeUpdate();
 

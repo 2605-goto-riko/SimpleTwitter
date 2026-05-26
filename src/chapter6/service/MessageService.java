@@ -117,7 +117,7 @@ public class MessageService {
 		}
 	}
 
-	public Message selectMessage(String messageId) {
+	public Message select(Integer messageId) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
@@ -145,7 +145,7 @@ public class MessageService {
 	}
 
 	/*つぶやきの更新*/
-	public void update(int messageId, String text) {
+	public void update(Message message) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
@@ -154,7 +154,7 @@ public class MessageService {
 
 		try {
 			connection = getConnection();
-			new MessageDao().update(connection, messageId,text);
+			new MessageDao().update(connection, message);
 			commit(connection);
 
 		} catch (RuntimeException e) {
