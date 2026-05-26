@@ -76,21 +76,20 @@
 				</div>
 				<div>
 					<div class="buttons">
-							<c:if test="${ loginUser.id == message.userId}">
-								<form class="deleteButton" action="deleteMessage" method="post">
-									<input type="hidden" name="messageId" value="${message.id}">
-									<input type="submit" value="削除" class="btn">
-								</form>
-								<form action="edit" method="get">
-									<input type="hidden" name="messageId" value="${message.id}">
-									<input type="submit" value="編集">
-								</form>
-							</c:if>
+						<c:if test="${ loginUser.id == message.userId}">
+							<form class="deleteButton" action="deleteMessage" method="post">
+								<input type="hidden" name="messageId" value="${message.id}">
+								<input type="submit" value="削除" class="btn">
+							</form>
+							<form action="edit" method="get">
+								<input type="hidden" name="messageId" value="${message.id}">
+								<input type="submit" value="編集">
+							</form>
+						</c:if>
 					</div>
 				</div>
 				<div class="date">
-					<fmt:formatDate value="${message.createdDate}"
-						pattern="yyyy/MM/dd HH:mm:ss" />
+					<fmt:formatDate value="${message.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />
 				</div>
 			</div>
 		</c:forEach>
