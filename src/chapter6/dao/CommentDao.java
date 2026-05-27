@@ -14,7 +14,6 @@ import chapter6.logging.InitApplication;
 
 public class CommentDao {
 
-
 	/**
 	* ロガーインスタンスの生成
 	*/
@@ -27,9 +26,14 @@ public class CommentDao {
 	public CommentDao() {
 		InitApplication application = InitApplication.getInstance();
 		application.init();
-
 	}
 
+
+/*
+ * コメントを登録する
+ * 引数：Connection,Comment
+ * 戻り値：無し
+*/
 	public void insert(Connection connection, Comment comment) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +

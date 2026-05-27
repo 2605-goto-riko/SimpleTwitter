@@ -17,7 +17,6 @@ import chapter6.logging.InitApplication;
 
 public class UserCommentDao {
 
-
 	/**
 	* ロガーインスタンスの生成
 	*/
@@ -32,6 +31,12 @@ public class UserCommentDao {
 		application.init();
 	}
 
+
+	/*
+	 * コメントを取得する
+	 * 引数：Connection(Connection),メッセージid(Integer),最大行(int)
+	 * 戻り値：UserComment(List)
+	 */
 	public List<UserComment> select(Connection connection, Integer messageId, int num) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
@@ -42,12 +47,12 @@ public class UserCommentDao {
 
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT ");
-			sql.append("comments.id AS message_id, ");
-			sql.append("users.id AS user_id, ");
-			sql.append("users.name, users.account, ");
-			sql.append("comments.id AS comment_id, ");
-			sql.append("comments.text, ");
-			sql.append("comments.created_date ");
+			sql.append("    messages.id AS message_id, ");
+			sql.append("    users.id AS user_id, ");
+			sql.append("    users.name, users.account, ");
+			sql.append("    comments.id AS comment_id, ");
+			sql.append("    comments.text, ");
+			sql.append("    comments.created_date ");
 			sql.append("FROM comments ");
 			sql.append("INNER JOIN messages ");
 			sql.append("ON comments.message_id = messages.id ");
@@ -59,7 +64,8 @@ public class UserCommentDao {
 
 			ResultSet rs = ps.executeQuery();
 
-			List<UserComment> userComment = toUserMessageComment(rs);
+			//取得した値をUserCommentBeanに詰めてリストにする
+			List<UserComment> userComment = toUserComment(rs);
 
 			return userComment;
 
@@ -72,7 +78,7 @@ public class UserCommentDao {
 	}
 
 
-	private List<UserComment> toUserMessageComment(ResultSet rs) throws SQLException {
+	private List<UserComment> toUserComment(ResultSet rs) throws SQLException {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
@@ -96,5 +102,4 @@ public class UserCommentDao {
 			close(rs);
 		}
 	}
-
 }

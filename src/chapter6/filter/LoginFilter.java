@@ -31,12 +31,12 @@ public class LoginFilter implements Filter {
 			→サーブレットを実行
 			②ログインしていない
 			→ログインページに遷移、エラーメッセージを出力*/
-			if(user != null) {
-				chain.doFilter(request, response); // サーブレットを実行
-			}else {
-				httpRequest.setAttribute("errorMessages", "ログインしてください");
-				httpRequest.getRequestDispatcher("login.jsp").forward(request, response);
-			}
+		if (user != null) {
+			chain.doFilter(request, response); // サーブレットを実行
+		} else {
+			httpRequest.setAttribute("errorMessages", "ログインしてください");
+			httpRequest.getRequestDispatcher("login.jsp").forward(request, response);
+		}
 	}
 
 	@Override

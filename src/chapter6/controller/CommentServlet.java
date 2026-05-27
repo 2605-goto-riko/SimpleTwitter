@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -18,8 +19,7 @@ import chapter6.logging.InitApplication;
 import chapter6.service.CommentService;
 
 @WebServlet(urlPatterns = { "/comment" })
-public class CommentServlet  extends HttpServlet{
-
+public class CommentServlet extends HttpServlet {
 
 	/**
 	* ロガーインスタンスの生成
@@ -35,6 +35,7 @@ public class CommentServlet  extends HttpServlet{
 		application.init();
 	}
 
+
 	/*返信ボタン押下後の登録処理*/
 	@Override
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -43,25 +44,35 @@ public class CommentServlet  extends HttpServlet{
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
+		//エラーメッセージリストを作成
 		List<String> errorMessages = new ArrayList<String>();
 
+		//セッションを取得
+		HttpSession session = request.getSession();
+
+		//画面から情報を取得
 		String text = request.getParameter("text");
 		Integer messageId = Integer.parseInt(request.getParameter("messageId"));
 		Integer userId = Integer.parseInt(request.getParameter("userId"));
 
+		//引数用にcommentBeanに画面から取得した情報を詰める
 		Comment comment = new Comment();
 		comment.setText(text);
 		comment.setUserId(userId);
 		comment.setMessageId(messageId);
 
+		//バリデーションチェック
 		if (!isValid(text, errorMessages)) {
-			request.setAttribute("errorMessages", errorMessages);
-			request.getRequestDispatcher("./").forward(request, response);
+			//ホーム画面にRedirectするのでsessionにエラーメッセージを設定
+			session.setAttribute("errorMessages", errorMessages);
+			response.sendRedirect("./");
 			return;
 		}
+		//Serviceメソッドを呼び出す
 		new CommentService().insert(comment);
 		response.sendRedirect("./");
 	}
+
 
 	private boolean isValid(String text, List<String> errorMessages) {
 

@@ -63,6 +63,7 @@ public class MessageService {
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
+		//最大取得行数を定義
 		final int LIMIT_NUM = 1000;
 
 		Connection connection = null;
@@ -70,6 +71,8 @@ public class MessageService {
 		try {
 			connection = getConnection();
 			Integer id = null;
+
+			//userIdの型変換
 			if (!StringUtils.isEmpty(userId)) {
 				id = Integer.parseInt(userId);
 			}
@@ -78,14 +81,14 @@ public class MessageService {
 			String end;
 
 			if (StringUtils.isBlank(startDate)) {
-				//システム開始より前の日付を設定
+				//入力がない場合、システム開始より前の日付を設定
 				start = "2026/01/01 00:00:00";
 			} else {
 				start = startDate + " 00:00:00";
 			}
 
 			if (StringUtils.isBlank(endDate)) {
-				//現在日時を取得
+				//入力がない場合、現在日時を取得
 				Date nowDate = new Date();
 				SimpleDateFormat formatData = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
 				end = formatData.format(nowDate);

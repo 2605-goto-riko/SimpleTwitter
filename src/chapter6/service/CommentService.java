@@ -32,6 +32,10 @@ public class CommentService {
 		application.init();
 	}
 
+
+	/*コメントを登録する
+	 * 引数：Comment
+	 * 戻り値：無し*/
 	public void insert(Comment comment) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
@@ -40,6 +44,7 @@ public class CommentService {
 		Connection connection = null;
 		try {
 			connection = getConnection();
+			//Daoメソッドを呼び出す
 			new CommentDao().insert(connection, comment);
 			commit(connection);
 		} catch (RuntimeException e) {
@@ -56,11 +61,15 @@ public class CommentService {
 	}
 
 
+/*コメントを取得
+ * 引数：メッセージID(String)
+ * 戻り値：UserComment(List)*/
 	public List<UserComment> select(String messageId) {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
+		//1000行の制限を定義
 		final int LIMIT_NUM = 1000;
 
 		Connection connection = null;
@@ -68,10 +77,12 @@ public class CommentService {
 		try {
 			connection = getConnection();
 			Integer id = null;
+			//型変換
 			if (!StringUtils.isEmpty(messageId)) {
 				id = Integer.parseInt(messageId);
 			}
 
+			//Daoメソッドを呼び出す
 			List<UserComment> userComment = new UserCommentDao().select(connection, id, LIMIT_NUM);
 			commit(connection);
 

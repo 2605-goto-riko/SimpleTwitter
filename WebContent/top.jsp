@@ -40,15 +40,6 @@
 				<c:out value="${loginUser.description}" />
 			</div>
 		</div>
-		<div class=date>
-			<form action="./" method="get">
-				日時：
-				<input type="date" name="startDate">
-				～
-				<input type="date" name="endDate">
-				<input type="submit" value="絞り込み">
-			</div>
-		</form>
 	</c:if>
 	<c:if test="${ not empty errorMessages }">
 		<div class="errorMessages">
@@ -60,13 +51,22 @@
 		</div>
 		<c:remove var="errorMessages" scope="session" />
 	</c:if>
+	<div class=date>
+		<form action="./" method="get">
+			日時：
+			<input type="date" name="startDate" value="${startDate}">
+			～
+			<input type="date" name="endDate" value="${endDate}">
+			<input type="submit" value="絞り込み">
+		</form>
+	</div>
 	<!-- つぶやき機能 ログイン時のみ表示-->
 	<div class="form-area">
 		<c:if test="${ isShowMessageForm }">
 			<form action="message" method="post">
 				いま、どうしてる？<br />
 				<textarea name="text" cols="100" rows="5" class="tweet-box"></textarea>
-				<br /> <input type="submit" value="つぶやく">（140文字まで）
+				<br /><input type="submit" value="つぶやく">（140文字まで）
 			</form>
 		</c:if>
 	</div>
@@ -77,8 +77,9 @@
 				<div class="account-name">
 					<!-- アカウント名をリンクにする -->
 					<a href="./?user_id=<c:out value="${message.userId}"/> ">
-					<span class="account"><c:out value="${message.account}" /></span>
-					</a> <span class="name"><c:out value="${message.name}" /></span>
+						<span class="account"><c:out value="${message.account}" /></span>
+					</a>
+					<span class="name"><c:out value="${message.name}" /></span>
 				</div>
 				<div class="text">
 					<pre><c:out value="${message.text}" /></pre>
@@ -102,22 +103,25 @@
 					<!-- 返信 -->
 					<div class=comments>
 						<!-- 返信コメントを表示 -->
-						<!-- コメントのリストを表示する -->
 						<c:forEach items="${comments}" var="comment">
+							<!-- messagesテーブルのidとcommentesテーブルのmessage_idが一致する場合のみ表示 -->
 							<c:if test="${comment.messageId == message.id }">
-								<!-- コメントしたユーザー情報 -->
+								<!-- ユーザー情報 -->
 								<div class="account-name">
 									<a href="./?user_id=<c:out value="${comment.userId}"/> ">
 										<span class="account"><c:out value="${comment.account}" /></span>
 									</a>
 									<span class="name"><c:out value="${comment.name}" /></span>
 								</div>
-								<span class="comment"><c:out value="${comment.text}" /></span>
+								<!-- コメント -->
+								<pre><c:out value="${comment.text}" /></pre>
+								<!-- コメント日時 -->
 								<div class="messageDate">
 									<fmt:formatDate value="${comment.createdDate}" pattern="yyyy/MM/dd HH:mm:ss" />
 								</div>
 							</c:if>
 						</c:forEach>
+						<!-- ログイン時のみ返信テキストボックスとボタンを表示 -->
 						<c:if test="${ isShowMessageForm }">
 							<form action="comment" method="post">
 								<input type="hidden" name="messageId" value="${message.id}">

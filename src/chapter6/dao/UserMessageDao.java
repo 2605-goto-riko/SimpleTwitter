@@ -53,6 +53,7 @@ public class UserMessageDao {
 			sql.append("WHERE ");
 			if (id != null) {
 				sql.append("messages.user_id = ? ");
+				sql.append("AND ");
 			}
 			sql.append("messages.created_date BETWEEN ? AND ? ");
 			sql.append("ORDER BY created_date DESC limit " + num);
@@ -61,11 +62,12 @@ public class UserMessageDao {
 
 			if (id != null) {
 				ps.setInt(1, id);
+				ps.setString(2, startDate);
+				ps.setString(3, endDate);
 			}else {
 				ps.setString(1, startDate);
 				ps.setString(2, endDate);
 			}
-
 
 			ResultSet rs = ps.executeQuery();
 
@@ -82,10 +84,8 @@ public class UserMessageDao {
 
 	private List<UserMessage> toUserMessages(ResultSet rs) throws SQLException {
 
-		log.info(new Object() {
-		}.getClass().getEnclosingClass().getName() +
-				" : " + new Object() {
-				}.getClass().getEnclosingMethod().getName());
+		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
+				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
 
 		List<UserMessage> messages = new ArrayList<UserMessage>();
 		try {
