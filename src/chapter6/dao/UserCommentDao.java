@@ -37,7 +37,7 @@ public class UserCommentDao {
 	 * 引数：Connection(Connection),メッセージid(Integer),最大行(int)
 	 * 戻り値：UserComment(List)
 	 */
-	public List<UserComment> select(Connection connection, Integer messageId, int num) {
+	public List<UserComment> select(Connection connection, int num) {
 
 		log.info(new Object() {}.getClass().getEnclosingClass().getName() +
 				" : " + new Object() {}.getClass().getEnclosingMethod().getName());
@@ -47,15 +47,13 @@ public class UserCommentDao {
 
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT ");
-			sql.append("    messages.id AS message_id, ");
 			sql.append("    users.id AS user_id, ");
 			sql.append("    users.name, users.account, ");
 			sql.append("    comments.id AS comment_id, ");
+			sql.append("    comments.message_id AS message_id, ");
 			sql.append("    comments.text, ");
 			sql.append("    comments.created_date ");
 			sql.append("FROM comments ");
-			sql.append("INNER JOIN messages ");
-			sql.append("ON comments.message_id = messages.id ");
 			sql.append("INNER JOIN users ");
 			sql.append("ON comments.user_id = users.id ");
 			sql.append("ORDER BY comments.created_date ASC limit " + num);

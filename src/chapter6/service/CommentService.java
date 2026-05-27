@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.StringUtils;
-
 import chapter6.beans.Comment;
 import chapter6.beans.UserComment;
 import chapter6.dao.CommentDao;
@@ -64,7 +62,7 @@ public class CommentService {
 /*コメントを取得
  * 引数：メッセージID(String)
  * 戻り値：UserComment(List)*/
-	public List<UserComment> select(String messageId) {
+	public List<UserComment> select() {
 
 		log.info(new Object(){}.getClass().getEnclosingClass().getName() +
 				" : " + new Object(){}.getClass().getEnclosingMethod().getName());
@@ -76,14 +74,9 @@ public class CommentService {
 
 		try {
 			connection = getConnection();
-			Integer id = null;
-			//型変換
-			if (!StringUtils.isEmpty(messageId)) {
-				id = Integer.parseInt(messageId);
-			}
 
 			//Daoメソッドを呼び出す
-			List<UserComment> userComment = new UserCommentDao().select(connection, id, LIMIT_NUM);
+			List<UserComment> userComment = new UserCommentDao().select(connection, LIMIT_NUM);
 			commit(connection);
 
 			return userComment;
